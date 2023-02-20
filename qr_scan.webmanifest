@@ -4,8 +4,8 @@
 	"description": "Web app for checking attendee for the volley club 'Les louves'.",
 	"icons": [
 		{
-			"src": "icons/LOGO_CLUB.png",
-			"sizes": "202x242",
+			"src": "/icons/logo.png",
+			"sizes": "512x512",
 			"type": "image/png"
 		}
 	],
