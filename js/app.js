@@ -1,6 +1,7 @@
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register("./js/sw.js");
 };
+console.log(navigator);
 
 var qrcode = window.qrcode;
 
