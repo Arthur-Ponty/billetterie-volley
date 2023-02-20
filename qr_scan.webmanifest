@@ -1,0 +1,16 @@
+{
+	"name": "Scan QR Volley",
+	"short_name": "Scan QR",
+	"description": "Web app for checking attendee for the volley club 'Les louves'.",
+	"icons": [
+		{
+			"src": "icons/LOGO_CLUB.png",
+			"sizes": "202x242",
+			"type": "image/png"
+		}
+	],
+	"start_url": "/index.html",
+	"display": "fullscreen",
+	"theme_color": "#B12A34",
+	"background_color": "#B12A34"
+}
