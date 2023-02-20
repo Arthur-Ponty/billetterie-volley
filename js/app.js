@@ -1,11 +1,6 @@
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register("./js/sw.js");
-    console.log("service worker", navigator);
 };
-
-setTimeout(() => {
-    console.log("timeout", navigator);
-}, 3000);
 
 var qrcode = window.qrcode;
 
