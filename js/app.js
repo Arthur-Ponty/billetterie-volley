@@ -3,7 +3,7 @@
  */
 try {
     if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("./js/sw.js");
+        navigator.serviceWorker.register("../sw.js");
     };   
 } catch (error) {
     console.error("Service Worker not supported");
