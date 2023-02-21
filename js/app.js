@@ -49,7 +49,7 @@ qrcode.callback = async res => {
  * We launch the camera of the device of the user
  */
 btnScanQR.onclick = () => {
-    qrResult.classList.remove(["error", "valid", "already"]);
+    qrResult.classList.remove("error", "valid", "already");
     navigator.mediaDevices
     .getUserMedia({ video: { facingMode: "environment" } })
     .then(function(stream) {
@@ -114,10 +114,9 @@ async function ajaxCallEndpoint() {
     await fetch(endpoint_app, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        if(data.error == "attendee_already_check_in") {
+        if(data.attendee.checked_in) {
             qrResult.classList.add("already");
-        } else {
+        } else if(!data.attendee.checked_in){
             qrResult.classList.add("valid");
         }
         loader.classList.add("hidden");
