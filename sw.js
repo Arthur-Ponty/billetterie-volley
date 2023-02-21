@@ -6,7 +6,6 @@ var contentToCache = [
   '/qr_scan_volley/js/app.js',
   '/qr_scan_volley/js/qr_packed.js',
   '/qr_scan_volley/css/qr-scan.css',
-  '/qr_scan_volley/imgs/qr_icon.svg',
   '/qr_scan_volley/imgs/logo_club.png',
   '/qr_scan_volley/icons/icon-32.png',
   '/qr_scan_volley/icons/icon-64.png',
@@ -33,10 +32,11 @@ self.addEventListener('fetch', function(e) {
 			console.log('[Service Worker] Fetching resource: '+e.request.url);
 			return r || fetch(e.request).then(function(response) {
 				return caches.open(cacheName).then(function(cache) {
-					if(!e.request.url.startsWith('http')){
-						console.log('[Service Worker] Caching new resource: '+e.request.url);
-						cache.put(e.request, response.clone());
+					if ( url.startsWith('chrome-extension') || url.includes('extension') || !(url.indexOf('http') === 0) ) {
+						return;
 					}
+					console.log('[Service Worker] Caching new resource: '+e.request.url);
+					cache.put(e.request, response.clone());
 					return response;
 				});
 			});
