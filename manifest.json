@@ -20,7 +20,7 @@
 		},
 		{
 			"src": "./icons/icon-256.png",
-			"sizes": "256x256",
+			"sizes": "225x225",
 			"type": "image/png"
 		},
 		{
