@@ -41,6 +41,12 @@ h1 {
 	max-width: 500px;
 	border-radius: 15px;
 	margin: auto;
+	cursor: pointer;
+	user-select: none;
+}
+
+#button:hover {
+	background-color: #e0163b;
 }
 
 #qr-canvas {
