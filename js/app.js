@@ -114,7 +114,8 @@ async function ajaxCallEndpoint() {
     await fetch(endpoint_app, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
-        if(data.error = "attendee_already_check_in") {
+        console.log(data);
+        if(data.error == "attendee_already_check_in") {
             qrResult.classList.add("already");
         } else {
             qrResult.classList.add("valid");
