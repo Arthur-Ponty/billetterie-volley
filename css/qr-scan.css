@@ -1,7 +1,7 @@
 html {
 	height: 100%;
-  }
-  
+}
+
 body {
 	font-family: sans-serif;
 	height: 100%;
@@ -52,8 +52,7 @@ h1 {
 #qr-canvas {
 	margin: auto;
 	width: calc(100% - 20px);
-	max-width: 300px;
-	max-height: 300px;
+	min-height: 200px;
 }
 
 #qr-result {
@@ -88,8 +87,8 @@ h1 {
 	background-color: #323238;
 	display: flex;
 	flex-direction: column;
-    justify-content: center;
-    align-items: center;
+	justify-content: center;
+	align-items: center;
 }
 
 .container-loader p {
@@ -98,14 +97,14 @@ h1 {
 }
 
 .container-loader .loader {
-    width: 75px;
-    height: 75px;
-    border: 10px solid #FFF;
-    border-bottom-color: #f92552;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
+	width: 75px;
+	height: 75px;
+	border: 10px solid #FFF;
+	border-bottom-color: #f92552;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
 }
 
 .container-loader.hidden {
@@ -113,10 +112,11 @@ h1 {
 }
 
 @keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-} 
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}

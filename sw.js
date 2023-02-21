@@ -1,17 +1,17 @@
-var cacheName = 'qr_scan_volley-v1';
+var cacheName = 'billetterie_volley-v1';
 var contentToCache = [
-  '/qr_scan_volley/index.html',
-  '/qr_scan_volley/manifest.json',
-  '/qr_scan_volley/sw.js',
-  '/qr_scan_volley/js/app.js',
-  '/qr_scan_volley/js/qr_packed.js',
-  '/qr_scan_volley/css/qr-scan.css',
-  '/qr_scan_volley/imgs/logo_club.png',
-  '/qr_scan_volley/icons/icon-32.png',
-  '/qr_scan_volley/icons/icon-64.png',
-  '/qr_scan_volley/icons/icon-128.png',
-  '/qr_scan_volley/icons/icon-256.png',
-  '/qr_scan_volley/icons/icon-512.png',
+  '/billetterie-volley/index.html',
+  '/billetterie-volley/manifest.json',
+  '/billetterie-volley/sw.js',
+  '/billetterie-volley/js/app.js',
+  '/billetterie-volley/js/qr_packed.js',
+  '/billetterie-volley/css/qr-scan.css',
+  '/billetterie-volley/imgs/logo_club.png',
+  '/billetterie-volley/icons/icon-32.png',
+  '/billetterie-volley/icons/icon-64.png',
+  '/billetterie-volley/icons/icon-128.png',
+  '/billetterie-volley/icons/icon-256.png',
+  '/billetterie-volley/icons/icon-512.png',
 ];
 
 // We add the cache

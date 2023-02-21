@@ -2,9 +2,9 @@
  * Register the service worker for the webapp
  */
 try {
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/qr_scan_volley/sw.js");
-    };   
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("/billetterie-volley/sw.js");
+    };
 } catch (error) {
     console.error("Service Worker not supported");
 }
@@ -32,6 +32,7 @@ qrcode.callback = async res => {
     if (res) {
         qrResult.classList.remove("error", "valid", "already");
         loader.classList.remove("hidden");
+        outputData.innerText = '';
         endpoint_app = prepareEndpoint(res);
         await ajaxCallEndpoint();
 
@@ -51,18 +52,18 @@ qrcode.callback = async res => {
  */
 btnScanQR.onclick = () => {
     navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: "environment" } })
-    .then(function(stream) {
-        scanning = true;
-        qrResult.hidden = true;
-        btnScanQR.hidden = true;
-        canvasElement.hidden = false;
-        video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-        video.srcObject = stream;
-        video.play();
-        tick();
-        scan();
-    });
+        .getUserMedia({ video: { facingMode: "environment", width: 400, height: 300 } })
+        .then(function (stream) {
+            scanning = true;
+            qrResult.hidden = true;
+            btnScanQR.hidden = true;
+            canvasElement.hidden = false;
+            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            video.srcObject = stream;
+            video.play();
+            tick();
+            scan();
+        });
 };
 
 /**
@@ -71,7 +72,7 @@ btnScanQR.onclick = () => {
 function tick() {
     canvasElement.height = video.videoHeight;
     canvasElement.width = video.videoWidth;
-    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+    canvas.drawImage(video, 0, 0);
 
     scanning && requestAnimationFrame(tick);
 }
@@ -92,10 +93,11 @@ function scan() {
  * We prepare the url of the endpoint
  */
 function prepareEndpoint(result_qr) {
+    console.log(result_qr);
     let endpoint = "";
 
     first_split = result_qr.split("?");
-    endpoint = first_split[0] + "wp-json/tribe/tickets/v1/qr?";
+    endpoint = "https://saint-die-volley.eu/wp-json/tribe/tickets/v1/qr?";
 
     second_split = first_split[1].split("&");
 
@@ -111,19 +113,20 @@ function prepareEndpoint(result_qr) {
  * We call the site with the endpoint
  */
 async function ajaxCallEndpoint() {
-    await fetch(endpoint_app, {method: 'GET'})
-    .then(response => response.json())
-    .then(data => {
-        if(data.attendee.checked_in) {
-            qrResult.classList.add("already");
-        } else {
-            qrResult.classList.add("valid");
-        }
-        outputData.innerText = data.msg;
-    })
-    .catch(error => {
-        qrResult.classList.add("error");
-        outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
-    });
+    await fetch(endpoint_app, { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if (data.attendee.checked_in) {
+                qrResult.classList.add("already");
+            } else {
+                qrResult.classList.add("valid");
+            }
+            outputData.innerText = data.msg;
+        })
+        .catch(error => {
+            qrResult.classList.add("error");
+            outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
+        });
     loader.classList.add("hidden");
 }
