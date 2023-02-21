@@ -120,11 +120,11 @@ async function ajaxCallEndpoint() {
             qrResult.classList.add("valid");
         }
         loader.classList.add("hidden");
-        outputData.innerText = data.msg + "  " + data.attendee.checked_in;
+        outputData.innerText = data.msg;
     })
     .catch(error => {
         loader.classList.add("hidden");
-        outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
         qrResult.classList.add("error");
+        outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
     });
 }
