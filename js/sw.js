@@ -1,13 +1,13 @@
 var cacheName = 'qr_scan_volley-v1';
 var contentToCache = [
-  '/index.html',
-  '/manifest.json',
-  '/js/app.js',
-  '/js/qr_packed.js',
-  '/css/qr-scan.css',
-  '/imgs/qr_icon.svg',
-  '/icons/icon-256.png',
-  '/icons/icon-512.png',
+  '/qr_scan_volley/index.html',
+  '/qr_scan_volley/manifest.json',
+  '/qr_scan_volley/js/app.js',
+  '/qr_scan_volley/js/qr_packed.js',
+  '/qr_scan_volley/css/qr-scan.css',
+  '/qr_scan_volley/imgs/qr_icon.svg',
+  '/qr_scan_volley/icons/icon-256.png',
+  '/qr_scan_volley/icons/icon-512.png',
 ];
 
 // We add the cache
