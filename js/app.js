@@ -3,7 +3,7 @@
  */
 try {
     if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("../sw.js");
+        navigator.serviceWorker.register("/qr_scan_volley/sw.js");
     };   
 } catch (error) {
     console.error("Service Worker not supported");
