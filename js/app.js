@@ -20,8 +20,6 @@ const outputData = document.getElementById("outputData");
 const btnScanQR = document.getElementById("button");
 const loader = document.querySelector(".container-loader");
 
-const temp = document.querySelector(".container-loader p");
-
 let scanning = false;
 let endpoint_app = "";
 
@@ -32,9 +30,9 @@ let endpoint_app = "";
  */
 qrcode.callback = async res => {
     if (res) {
+        qrResult.classList.remove("error", "valid", "already");
         loader.classList.remove("hidden");
         endpoint_app = prepareEndpoint(res);
-        temp.innerText = endpoint_app;
         await ajaxCallEndpoint();
 
         video.srcObject.getTracks().forEach(track => {
@@ -52,7 +50,6 @@ qrcode.callback = async res => {
  * We launch the camera of the device of the user
  */
 btnScanQR.onclick = () => {
-    qrResult.classList.remove("error", "valid", "already");
     navigator.mediaDevices
     .getUserMedia({ video: { facingMode: "environment" } })
     .then(function(stream) {
