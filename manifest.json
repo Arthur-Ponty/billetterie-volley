@@ -1,7 +1,7 @@
 {
-	"name": "Billeterie Volley",
-	"short_name": "Billeterie",
-	"description": "Web app for checking attendee for the volley club 'Les louves'.",
+	"name": "Billetterie Volley",
+	"short_name": "Billetterie",
+	"description": "Web app for checking attendees for the volley club 'Les louves'.",
 	"icons": [
 		{
 			"src": "./icons/icon-32.png",

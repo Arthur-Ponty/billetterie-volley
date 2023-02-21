@@ -120,7 +120,7 @@ async function ajaxCallEndpoint() {
             qrResult.classList.add("valid");
         }
         loader.classList.add("hidden");
-        outputData.innerText = data.msg;
+        outputData.innerText = data.msg + "  " + data.attendee.checked_in;
     })
     .catch(error => {
         loader.classList.add("hidden");
