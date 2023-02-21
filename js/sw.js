@@ -1,5 +1,5 @@
 var cacheName = 'qr_scan_volley-v1';
-var appShellFiles = [
+var contentToCache = [
   './index.html',
   './manifest.json',
   './js/app.js',
