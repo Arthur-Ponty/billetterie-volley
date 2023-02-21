@@ -20,6 +20,8 @@ const outputData = document.getElementById("outputData");
 const btnScanQR = document.getElementById("button");
 const loader = document.querySelector(".container-loader");
 
+const temp = document.querySelector(".container-loader p");
+
 let scanning = false;
 let endpoint_app = "";
 
@@ -32,6 +34,7 @@ qrcode.callback = async res => {
     if (res) {
         loader.classList.remove("hidden");
         endpoint_app = prepareEndpoint(res);
+        temp.innerText = endpoint_app;
         await ajaxCallEndpoint();
 
         video.srcObject.getTracks().forEach(track => {
@@ -116,15 +119,14 @@ async function ajaxCallEndpoint() {
     .then(data => {
         if(data.attendee.checked_in) {
             qrResult.classList.add("already");
-        } else if(!data.attendee.checked_in){
+        } else {
             qrResult.classList.add("valid");
         }
-        loader.classList.add("hidden");
         outputData.innerText = data.msg;
     })
     .catch(error => {
-        loader.classList.add("hidden");
         qrResult.classList.add("error");
         outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
     });
+    loader.classList.add("hidden");
 }
