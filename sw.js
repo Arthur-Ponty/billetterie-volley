@@ -2,6 +2,7 @@ var cacheName = 'qr_scan_volley-v1';
 var contentToCache = [
   '/qr_scan_volley/index.html',
   '/qr_scan_volley/manifest.json',
+  '/qr_scan_volley/sw.js',
   '/qr_scan_volley/js/app.js',
   '/qr_scan_volley/js/qr_packed.js',
   '/qr_scan_volley/css/qr-scan.css',
