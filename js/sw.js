@@ -6,6 +6,7 @@ var contentToCache = [
   '/qr_scan_volley/js/qr_packed.js',
   '/qr_scan_volley/css/qr-scan.css',
   '/qr_scan_volley/imgs/qr_icon.svg',
+  '/qr_scan_volley/imgs/logo_club.png',
   '/qr_scan_volley/icons/icon-256.png',
   '/qr_scan_volley/icons/icon-512.png',
 ];

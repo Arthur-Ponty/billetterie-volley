@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>QR Code Scanner</title>
+    <title>Scan QR Volley</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./css/qr-scan.css" />
@@ -12,15 +12,18 @@
   <body>
 	<main>
 		<div id="container">
-			<h1>QR Code Scanner</h1>
+			<img src="./imgs/logo_club.png" alt="logo club">
+			<h1>Scan QR Volley</h1>
 		
-			<a id="btn-scan-qr">
-				<img src="./imgs/qr_icon.svg">
-			<a/>
+			<a id="button">Scannez un nouveau billet</a>
 		
 			<canvas hidden="" id="qr-canvas"></canvas>
 		
 			<div id="qr-result" hidden=""><span id="outputData"></span></div>
+		</div>
+		<div class="container-loader hidden">
+			<p>Veuillez patienter ...</p>
+			<span class="loader"></span>
 		</div>
 	</main>
 

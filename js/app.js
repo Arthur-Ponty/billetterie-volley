@@ -1,6 +1,13 @@
-if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("./js/sw.js");
-};
+/**
+ * Register the service worker for the webapp
+ */
+try {
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("./js/sw.js");
+    };   
+} catch (error) {
+    console.error("Service Worker not supported");
+}
 
 var qrcode = window.qrcode;
 
@@ -10,13 +17,20 @@ const canvas = canvasElement.getContext("2d");
 
 const qrResult = document.getElementById("qr-result");
 const outputData = document.getElementById("outputData");
-const btnScanQR = document.getElementById("btn-scan-qr");
+const btnScanQR = document.getElementById("button");
+const loader = document.querySelector(".container-loader");
 
 let scanning = false;
 let endpoint_app = "";
 
+/**
+ * The callback of the qr code
+ * Launch when a qr code is decrypted
+ * @param {string} res The result of the qr code 
+ */
 qrcode.callback = async res => {
     if (res) {
+        loader.classList.remove("hidden");
         endpoint_app = prepareEndpoint(res);
         await ajaxCallEndpoint();
 
@@ -25,12 +39,17 @@ qrcode.callback = async res => {
         });
         scanning = false;
         qrResult.hidden = false;
-        canvasElement.hidden = true;
         btnScanQR.hidden = false;
+        canvasElement.hidden = true;
     }
 };
 
+/**
+ * When we click on the button
+ * We launch the camera of the device of the user
+ */
 btnScanQR.onclick = () => {
+    qrResult.classList.remove(["error", "valid", "already"]);
     navigator.mediaDevices
     .getUserMedia({ video: { facingMode: "environment" } })
     .then(function(stream) {
@@ -46,6 +65,9 @@ btnScanQR.onclick = () => {
     });
 };
 
+/**
+ * We redraw the canvas every tick
+ */
 function tick() {
     canvasElement.height = video.videoHeight;
     canvasElement.width = video.videoWidth;
@@ -54,6 +76,10 @@ function tick() {
     scanning && requestAnimationFrame(tick);
 }
 
+/**
+ * We try to decode a qr code, 
+ * If qr code not found, then we wait 300ms and retry
+ */
 function scan() {
     try {
         qrcode.decode();
@@ -62,6 +88,9 @@ function scan() {
     }
 }
 
+/**
+ * We prepare the url of the endpoint
+ */
 function prepareEndpoint(result_qr) {
     let endpoint = "";
 
@@ -78,8 +107,24 @@ function prepareEndpoint(result_qr) {
     return endpoint;
 }
 
+/**
+ * We call the site with the endpoint
+ */
 async function ajaxCallEndpoint() {
     await fetch(endpoint_app, {method: 'GET'})
     .then(response => response.json())
-    .then(data => { outputData.innerText = data.msg; });
+    .then(data => {
+        if(data.error = "attendee_already_check_in") {
+            qrResult.classList.add("already");
+        } else {
+            qrResult.classList.add("valid");
+        }
+        loader.classList.add("hidden");
+        outputData.innerText = data.msg;
+    })
+    .catch(error => {
+        loader.classList.add("hidden");
+        outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
+        qrResult.classList.add("error");
+    });
 }
