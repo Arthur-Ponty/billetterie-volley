@@ -1,12 +1,13 @@
 var cacheName = 'qr_scan_volley-v1';
 var appShellFiles = [
   './index.html',
+  './manifest.json',
   './js/app.js',
   './js/qr_packed.js',
   './css/qr-scan.css',
   './imgs/qr_icon.svg',
   './icons/icon-256.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
 ];
 
 // We add the cache
