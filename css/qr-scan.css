@@ -65,8 +65,8 @@ h3, h4 {
 
 #qr-video {
 	margin: auto;
-	width: 250px;
-	height: 250px;
+	width: 80%;
+	height: auto;
 	margin-bottom: 20px;
 }
 

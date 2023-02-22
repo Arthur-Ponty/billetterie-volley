@@ -111,7 +111,7 @@ function prepareEndpoint(result_qr) {
 async function ajaxCallEndpoint() {
     if(endpoint_app == "error") {
         qrResult.classList.add("error");
-        outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
+        outputData.innerText = "QR code invalide";
         return ;
     }
     await fetch(endpoint_app, { method: 'GET' })
