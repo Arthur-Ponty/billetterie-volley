@@ -41,6 +41,7 @@ h3, h4 {
 #cam-list {
 	background-color: white;
 	border-color: white;
+	border-radius: 5px;
 	color: #1f2024;
 	font-family: sans-serif;
 	font-weight: 600;
