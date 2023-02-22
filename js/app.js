@@ -35,6 +35,7 @@ const scanner = new QrScanner(video, result => setResult(result), {
  */
 async function setResult(result) {
     if (result) {
+        console.log(result.data);
         scanner.stop();
         qrResult.classList.remove("error", "valid", "already");
         loader.classList.remove("hidden");
@@ -42,6 +43,7 @@ async function setResult(result) {
         endpoint_app = prepareEndpoint(result.data);
         await ajaxCallEndpoint();
 
+        video.hidden = true;
         qrResult.hidden = false;
         button.hidden = false;
     }
@@ -49,6 +51,7 @@ async function setResult(result) {
 
 button.addEventListener("click", () => {
     scanner.start();
+    video.hidden = false;
     qrResult.hidden = true;
     button.hidden = true;
 })
