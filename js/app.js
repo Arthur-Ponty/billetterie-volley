@@ -1,19 +1,19 @@
 /**
  * Register the service worker for the webapp
  */
-// try {
-//     if ('serviceWorker' in navigator) {
-//         navigator.serviceWorker.register("/billetterie-volley/sw.js");
-//     };
-// } catch (error) {
-//     console.error("Service Worker not supported");
-// }
+try {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("/billetterie-volley/sw.js");
+    };
+} catch (error) {
+    console.error("Service Worker not supported");
+}
 
 import QrScanner from "./qr-scanner.min.js";
 
 const video = document.getElementById("qr-video");
 const outputData = document.getElementById("outputData");
-const button = document.getElementById("butotn");
+const button = document.getElementById("button");
 
 function setResult(result) {
     console.log(result.data);
