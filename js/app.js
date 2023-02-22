@@ -88,6 +88,7 @@ window.addEventListener("load", () => {
     function prepareEndpoint(result_qr) {
         let endpoint = "";
 
+        console.log(typeof result_qr);
         if(typeof result_qr != 'string' || !result_qr.includes("saint-die-volley.eu")) {
             return "error";
         }
