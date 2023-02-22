@@ -19,7 +19,6 @@ const qrResult = document.getElementById("qr-result");
 const loader = document.querySelector(".container-loader");
 
 let endpoint_app = "";
-let hasListCamera = false;
 
 /**
  * Create the scanner
@@ -31,6 +30,17 @@ const scanner = new QrScanner(video, result => setResult(result), {
     highlightScanRegion: true,
     highlightCodeOutline: true
 });
+
+/**
+ * Get all cameras of the phone
+ * and add it to the list
+ */
+QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
+    let option = document.createElement('option');
+    option.value = camera.id;
+    option.text = camera.label;
+    camList.add(option);
+}));
 
 
 /**
@@ -62,20 +72,12 @@ button.addEventListener("click", () => {
     qrResult.hidden = true;
     button.hidden = true;
 
-    // We get all the camera of the phone to add it to the list
-    scanner.start().then(() => {
-        if(!hasListCamera) {
-            QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
-                let option = document.createElement('option');
-                option.value = camera.id;
-                option.text = camera.label;
-                camList.add(option);
-            }));
-            hasListCamera = true;
-        }
-    });
+    scanner.start();
 })
 
+/**
+ * On change of the list, we change the camera of the scanner
+ */
 camList.addEventListener("change", (event) => {
     scanner.setCamera(event.target.value);
 });
@@ -85,6 +87,10 @@ camList.addEventListener("change", (event) => {
  */
 function prepareEndpoint(result_qr) {
     let endpoint = "";
+
+    if(!result_qr.includes("saint-die-volley.eu")) {
+        return "error";
+    }
 
     let first_split = result_qr.split("?");
     endpoint = first_split[0] + "/wp-json/tribe/tickets/v1/qr?";
@@ -103,6 +109,11 @@ function prepareEndpoint(result_qr) {
  * We call the site with the endpoint
  */
 async function ajaxCallEndpoint() {
+    if(endpoint_app == "error") {
+        qrResult.classList.add("error");
+        outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
+        return ;
+    }
     await fetch(endpoint_app, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
