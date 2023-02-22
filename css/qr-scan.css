@@ -10,7 +10,7 @@ body {
 }
 
 main {
-	padding-top: 50px;
+	padding-top: 25px;
 	height: calc(100vh - 50px);
 	width: 100%;
 }
