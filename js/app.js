@@ -9,124 +9,126 @@ try {
     console.error("Service Worker not supported");
 }
 
-var qrcode = window.qrcode;
+import QrScanner from "./qr-scanner.min.js";
 
-const video = document.createElement("video");
-const canvasElement = document.getElementById("qr-canvas");
-const canvas = canvasElement.getContext("2d");
+window.addEventListener("load", () => {
+    const video = document.getElementById("qr-video");
+    const outputData = document.getElementById("outputData");
+    const button = document.getElementById("button");
+    const camList = document.getElementById("cam-list");
+    const qrResult = document.getElementById("qr-result");
+    const loader = document.querySelector(".container-loader");
 
-const qrResult = document.getElementById("qr-result");
-const outputData = document.getElementById("outputData");
-const btnScanQR = document.getElementById("button");
-const loader = document.querySelector(".container-loader");
+    let endpoint_app = "";
 
-let scanning = false;
-let endpoint_app = "";
+    /**
+     * Create the scanner
+     */
+    const scanner = new QrScanner(video, result => setResult(result), {
+        onDecodeError: error => {
+            outputData.innerText = error;
+        },
+        highlightScanRegion: true,
+        highlightCodeOutline: true
+    });
 
-/**
- * The callback of the qr code
- * Launch when a qr code is decrypted
- * @param {string} res The result of the qr code 
- */
-qrcode.callback = async res => {
-    if (res) {
-        qrResult.classList.remove("error", "valid", "already");
-        loader.classList.remove("hidden");
-        outputData.innerText = '';
-        endpoint_app = prepareEndpoint(res);
-        await ajaxCallEndpoint();
+    /**
+     * Get all cameras of the phone
+     * and add it to the list
+     */
+    QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
+        let option = document.createElement('option');
+        option.value = camera.id;
+        option.text = camera.label;
+        camList.add(option);
+    }));
 
-        video.srcObject.getTracks().forEach(track => {
-            track.stop();
-        });
-        scanning = false;
-        qrResult.hidden = false;
-        btnScanQR.hidden = false;
-        canvasElement.hidden = true;
+
+    /**
+     * The callback of the qr code
+     * Launch when a qr code is decrypted
+     * @param {string} res The result of the qr code 
+     */
+    async function setResult(result) {
+        if (result) {
+            scanner.stop();
+            qrResult.classList.remove("error", "valid", "already");
+            loader.classList.remove("hidden");
+            outputData.innerText = '';
+            endpoint_app = prepareEndpoint(result.data);
+            await ajaxCallEndpoint();
+
+            video.hidden = true;
+            qrResult.hidden = false;
+            button.hidden = false;
+        }
     }
-};
 
-/**
- * When we click on the button
- * We launch the camera of the device of the user
- */
-btnScanQR.onclick = () => {
-    navigator.mediaDevices
-        .getUserMedia({ video: { facingMode: "environment", width: 400, height: 300 } })
-        .then(function (stream) {
-            scanning = true;
-            qrResult.hidden = true;
-            btnScanQR.hidden = true;
-            canvasElement.hidden = false;
-            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-            video.srcObject = stream;
-            video.play();
-            tick();
-            scan();
-        });
-};
+    /**
+     * Start the scanner on click on the button
+     */
+    button.addEventListener("click", () => {
+        video.hidden = false;
+        qrResult.hidden = true;
+        button.hidden = true;
 
-/**
- * We redraw the canvas every tick
- */
-function tick() {
-    canvasElement.height = video.videoHeight;
-    canvasElement.width = video.videoWidth;
-    canvas.drawImage(video, 0, 0);
+        scanner.start();
+    })
 
-    scanning && requestAnimationFrame(tick);
-}
+    /**
+     * On change of the list, we change the camera of the scanner
+     */
+    camList.addEventListener("change", (event) => {
+        scanner.setCamera(event.target.value);
+    });
 
-/**
- * We try to decode a qr code, 
- * If qr code not found, then we wait 300ms and retry
- */
-function scan() {
-    try {
-        qrcode.decode();
-    } catch (e) {
-        setTimeout(scan, 300);
+    /**
+     * We prepare the url of the endpoint
+     */
+    function prepareEndpoint(result_qr) {
+        let endpoint = "";
+
+        if(typeof result_qr != 'string' || !result_qr.includes("saint-die-volley.eu") || result_qr.includes("{")) {
+            return "error";
+        }
+
+        let first_split = result_qr.split("?");
+        endpoint = first_split[0] + "/wp-json/tribe/tickets/v1/qr?";
+
+        let second_split = first_split[1].split("&");
+
+        endpoint += second_split[1] + "&";
+        endpoint += second_split[2] + "&";
+        endpoint += second_split[3] + "&";
+        endpoint += "api_key=7ed7e5b9";
+
+        return endpoint;
     }
-}
 
-/**
- * We prepare the url of the endpoint
- */
-function prepareEndpoint(result_qr) {
-    console.log(result_qr);
-    let endpoint = "";
-
-    first_split = result_qr.split("?");
-    endpoint = "https://saint-die-volley.eu/wp-json/tribe/tickets/v1/qr?";
-
-    second_split = first_split[1].split("&");
-
-    endpoint += second_split[1] + "&";
-    endpoint += second_split[2] + "&";
-    endpoint += second_split[3] + "&";
-    endpoint += "api_key=7ed7e5b9";
-
-    return endpoint;
-}
-
-/**
- * We call the site with the endpoint
- */
-async function ajaxCallEndpoint() {
-    await fetch(endpoint_app, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            if (data.attendee.checked_in) {
-                qrResult.classList.add("already");
-            } else {
-                qrResult.classList.add("valid");
-            }
-            outputData.innerText = data.msg;
-        })
-        .catch(error => {
+    /**
+     * We call the site with the endpoint
+     */
+    async function ajaxCallEndpoint() {
+        if(endpoint_app == "error") {
             qrResult.classList.add("error");
-            outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
-        });
-    loader.classList.add("hidden");
-}
+            outputData.innerText = "QR code invalide";
+            loader.classList.add("hidden");
+            return ;
+        }
+        await fetch(endpoint_app, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.attendee.checked_in) {
+                    qrResult.classList.add("already");
+                } else {
+                    qrResult.classList.add("valid");
+                }
+                outputData.innerText = data.msg;
+            })
+            .catch(error => {
+                qrResult.classList.add("error");
+                outputData.innerText = "Quelque chose s'est mal passé, merci de réessayer.";
+            });
+        loader.classList.add("hidden");
+    }
+});
