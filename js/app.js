@@ -11,7 +11,7 @@ try {
 
 import QrScanner from "./qr-scanner.min.js";
 
-window.onload = () => {
+window.addEventListener("load", () => {
     const video = document.getElementById("qr-video");
     const outputData = document.getElementById("outputData");
     const button = document.getElementById("button");
@@ -131,4 +131,4 @@ window.onload = () => {
             });
         loader.classList.add("hidden");
     }
-}
+});
