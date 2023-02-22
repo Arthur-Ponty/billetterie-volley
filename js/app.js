@@ -112,6 +112,7 @@ async function ajaxCallEndpoint() {
     if(endpoint_app == "error") {
         qrResult.classList.add("error");
         outputData.innerText = "QR code invalide";
+        loader.classList.add("hidden");
         return ;
     }
     await fetch(endpoint_app, { method: 'GET' })
