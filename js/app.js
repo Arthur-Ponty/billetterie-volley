@@ -14,11 +14,10 @@ import QrScanner from "./qr-scanner.min.js";
 const video = document.getElementById("qr-video");
 const outputData = document.getElementById("outputData");
 const button = document.getElementById("button");
+const qrResult = document.getElementById("qr-result");
+const loader = document.querySelector(".container-loader");
 
-function setResult(result) {
-    console.log(result.data);
-    outputData.innerText = result.data;
-}
+let endpoint_app = "";
 
 const scanner = new QrScanner(video, result => setResult(result), {
     onDecodeError: error => {
@@ -27,6 +26,29 @@ const scanner = new QrScanner(video, result => setResult(result), {
     highlightScanRegion: true,
     highlightCodeOutline: true
 });
+
+
+/**
+ * The callback of the qr code
+ * Launch when a qr code is decrypted
+ * @param {string} res The result of the qr code 
+ */
+async function setResult(result) {
+    if (result) {
+        console.log(result);
+        scanner.stop();
+        qrResult.classList.remove("error", "valid", "already");
+        loader.classList.remove("hidden");
+        outputData.innerText = '';
+        endpoint_app = prepareEndpoint(result.data);
+        await ajaxCallEndpoint();
+
+        scanning = false;
+        qrResult.hidden = false;
+        btnScanQR.hidden = false;
+        canvasElement.hidden = true;
+    }
+}
 
 button.addEventListener("click", () => {
     scanner.start();
@@ -114,7 +136,7 @@ function prepareEndpoint(result_qr) {
     let endpoint = "";
 
     first_split = result_qr.split("?");
-    endpoint = "https://saint-die-volley.eu/wp-json/tribe/tickets/v1/qr?";
+    endpoint = first_split[0] + "/wp-json/tribe/tickets/v1/qr?";
 
     second_split = first_split[1].split("&");
 

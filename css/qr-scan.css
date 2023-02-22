@@ -49,7 +49,7 @@ h1 {
 	background-color: #e0163b;
 }
 
-#qr-canvas {
+#qr-canvas, #qr-video {
 	margin: auto;
 	width: calc(100% - 20px);
 	min-height: 200px;
