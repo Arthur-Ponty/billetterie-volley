@@ -35,7 +35,6 @@ const scanner = new QrScanner(video, result => setResult(result), {
  */
 async function setResult(result) {
     if (result) {
-        console.log(result);
         scanner.stop();
         qrResult.classList.remove("error", "valid", "already");
         loader.classList.remove("hidden");
@@ -43,15 +42,15 @@ async function setResult(result) {
         endpoint_app = prepareEndpoint(result.data);
         await ajaxCallEndpoint();
 
-        scanning = false;
         qrResult.hidden = false;
-        btnScanQR.hidden = false;
-        canvasElement.hidden = true;
+        button.hidden = false;
     }
 }
 
 button.addEventListener("click", () => {
     scanner.start();
+    qrResult.hidden = true;
+    button.hidden = true;
 })
 
 // const qrResult = document.getElementById("qr-result");
@@ -132,13 +131,12 @@ button.addEventListener("click", () => {
  * We prepare the url of the endpoint
  */
 function prepareEndpoint(result_qr) {
-    console.log(result_qr);
     let endpoint = "";
 
-    first_split = result_qr.split("?");
+    let first_split = result_qr.split("?");
     endpoint = first_split[0] + "/wp-json/tribe/tickets/v1/qr?";
 
-    second_split = first_split[1].split("&");
+    let second_split = first_split[1].split("&");
 
     endpoint += second_split[1] + "&";
     endpoint += second_split[2] + "&";
@@ -155,7 +153,6 @@ async function ajaxCallEndpoint() {
     await fetch(endpoint_app, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             if (data.attendee.checked_in) {
                 qrResult.classList.add("already");
             } else {
