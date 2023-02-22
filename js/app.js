@@ -88,7 +88,7 @@ camList.addEventListener("change", (event) => {
 function prepareEndpoint(result_qr) {
     let endpoint = "";
 
-    if(!result_qr.includes("saint-die-volley.eu")) {
+    if(!result_qr.includes("saint-die-volley.eu") && !result_qr.includes("ticket_id") && !result_qr.includes("event_id")) {
         return "error";
     }
 
