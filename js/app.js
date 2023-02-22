@@ -14,11 +14,16 @@ import QrScanner from "./qr-scanner.min.js";
 const video = document.getElementById("qr-video");
 const outputData = document.getElementById("outputData");
 const button = document.getElementById("button");
+const camList = document.getElementById("cam-list");
 const qrResult = document.getElementById("qr-result");
 const loader = document.querySelector(".container-loader");
 
 let endpoint_app = "";
+let hasListCamera = false;
 
+/**
+ * Create the scanner
+ */
 const scanner = new QrScanner(video, result => setResult(result), {
     onDecodeError: error => {
         outputData.innerText = error;
@@ -49,86 +54,31 @@ async function setResult(result) {
     }
 }
 
+/**
+ * Start the scanner on click on the button
+ */
 button.addEventListener("click", () => {
-    scanner.start();
     video.hidden = false;
     qrResult.hidden = true;
     button.hidden = true;
+
+    // We get all the camera of the phone to add it to the list
+    scanner.start().then(() => {
+        if(!hasListCamera) {
+            QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
+                let option = document.createElement('option');
+                option.value = camera.id;
+                option.text = camera.label;
+                camList.add(option);
+            }));
+            hasListCamera = true;
+        }
+    });
 })
 
-// const qrResult = document.getElementById("qr-result");
-// const outputData = document.getElementById("outputData");
-// const btnScanQR = document.getElementById("button");
-// const loader = document.querySelector(".container-loader");
-
-// let scanning = false;
-// let endpoint_app = "";
-
-// /**
-//  * The callback of the qr code
-//  * Launch when a qr code is decrypted
-//  * @param {string} res The result of the qr code 
-//  */
-// qrcode.callback = async res => {
-//     if (res) {
-//         qrResult.classList.remove("error", "valid", "already");
-//         loader.classList.remove("hidden");
-//         outputData.innerText = '';
-//         endpoint_app = prepareEndpoint(res);
-//         await ajaxCallEndpoint();
-
-//         video.srcObject.getTracks().forEach(track => {
-//             track.stop();
-//         });
-//         scanning = false;
-//         qrResult.hidden = false;
-//         btnScanQR.hidden = false;
-//         canvasElement.hidden = true;
-//     }
-// };
-
-// /**
-//  * When we click on the button
-//  * We launch the camera of the device of the user
-//  */
-// btnScanQR.onclick = () => {
-//     navigator.mediaDevices
-//         .getUserMedia({ video: { facingMode: "environment", width: 400, height: 300 } })
-//         .then(function (stream) {
-//             scanning = true;
-//             qrResult.hidden = true;
-//             btnScanQR.hidden = true;
-//             canvasElement.hidden = false;
-//             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-//             video.srcObject = stream;
-//             video.play();
-//             tick();
-//             scan();
-//         });
-// };
-
-// /**
-//  * We redraw the canvas every tick
-//  */
-// function tick() {
-//     canvasElement.height = video.videoHeight;
-//     canvasElement.width = video.videoWidth;
-//     canvas.drawImage(video, 0, 0);
-
-//     scanning && requestAnimationFrame(tick);
-// }
-
-// /**
-//  * We try to decode a qr code, 
-//  * If qr code not found, then we wait 300ms and retry
-//  */
-// function scan() {
-//     try {
-//         qrcode.decode();
-//     } catch (e) {
-//         setTimeout(scan, 300);
-//     }
-// }
+camList.addEventListener("change", (event) => {
+    scanner.setCamera(event.target.value);
+});
 
 /**
  * We prepare the url of the endpoint
