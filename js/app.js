@@ -93,7 +93,7 @@ window.addEventListener("load", () => {
         }
 
         let first_split = result_qr.split("?");
-        endpoint = first_split[0] + "/wp-json/tribe/tickets/v1/qr?";
+        endpoint = first_split[0] + "wp-json/tribe/tickets/v1/qr?";
 
         let second_split = first_split[1].split("&");
 
